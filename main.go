@@ -3,7 +3,6 @@ package main
 import (
     "bufio"
     "os"
-	"io"
     "fmt"
 	"net/http"
 	"strings"
@@ -12,8 +11,11 @@ import (
 )
 
 type Pokemon struct {
-	Id string `json:"id"`
+	Id int `json:"id"`
 	Name string `json:"name"`
+	Sprites struct {
+		FrontDefault string `json:"front_default"`
+	} `json:"sprites"`
 
 }
 
@@ -31,40 +33,31 @@ func Reader() string {
     return key
 }
 
-func getPokemonData() (*Pokemon, error) {
-    pokemon := Reader()
+func getPokemonData() (Pokemon, error) {
+    pokemon := "pikachu"
     url := fmt.Sprintf("https://pokeapi.co/api/v2/pokemon/%s", pokemon)
+	
     response, err := http.Get(url)
     if err != nil {
-        return nil, fmt.Errorf("error making GET request: %v", err)
+        return Pokemon{}, err
     }
     defer response.Body.Close()
 
-    if response.StatusCode != http.StatusOK {
-        return nil, fmt.Errorf("received non-200 response status: %d", response.StatusCode)
+	var result Pokemon
+	if err := json.NewDecoder(response.Body).Decode(&result); err != nil {
+        return Pokemon{}, err
     }
 
-    body, err := io.ReadAll(response.Body)
-    if err != nil {
-        return nil, fmt.Errorf("error reading response body: %v", err)
-    }
-
-    var pokemonData Pokemon
-    err = json.Unmarshal(body, &pokemonData)
-    if err != nil {
-        return nil, fmt.Errorf("error unmarshaling response: %v", err)
-    }
-
-    return &pokemonData, nil
+	return result, nil
 }
 
 func main() {
-	pokemonData, err := getPokemonData()
+    pokemonData, err := getPokemonData()
     if err != nil {
         fmt.Printf("Error fetching Pokémon data: %v\n", err)
         return
     }
 
-    fmt.Printf("ID: %d\n", pokemonData.Id)
-    fmt.Printf("Name: %s\n", pokemonData.Name)
+    fmt.Println("name and id")
+    fmt.Println(pokemonData)
 }
