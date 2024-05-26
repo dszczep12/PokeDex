@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"strings"
 	"encoding/json"
-	
 )
 
 type Pokemon struct {
@@ -50,6 +49,7 @@ func getPokemonData() (Pokemon, error) {
 
 	return result, nil
 }
+
 
 func main() {
     pokemonData, err := getPokemonData()
