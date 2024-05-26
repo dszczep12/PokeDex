@@ -62,15 +62,9 @@ func terminalOutput() {
 
 	flags := aic_package.DefaultFlags()
 
-	// This part is optional.
-	// You can directly pass default flags variable to aic_package.Convert() if you wish.
-	// There are more flags, but these are the ones shown for demonstration
 	flags.Dimensions = []int{50, 25}
 	flags.Colored = true
-	//flags.SaveTxtPath = "."
-	//flags.SaveImagePath = "."
 	flags.CustomMap = " .-=+#@"
-	//flags.FontFilePath = "./RobotoMono-Regular.ttf" // If file is in current directory
 	flags.SaveBackgroundColor = [4]int{50, 50, 50, 100}
 
 	asciiArt, err := aic_package.Convert(filePath, flags)
