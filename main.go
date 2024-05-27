@@ -7,8 +7,9 @@ import (
 	"net/http"
 	"strings"
     "github.com/TheZoraiz/ascii-image-converter/aic_package"
-
 	"encoding/json"
+    "github.com/briandowns/spinner"
+	"time"
 )
 
 type Pokemon struct {
@@ -55,9 +56,10 @@ func getPokemonData() (Pokemon, error) {
 func terminalOutput() {
     data, err := getPokemonData()
     if( err != nil) {
-        fmt.Print("idk something important")
+        fmt.Print("Api no have data :( ")
+        getPokemonData()
     }
-    // If file is in current directory. This can also be a URL to an image or gif.
+    
 	filePath := data.Sprites.FrontDefault
 
 	flags := aic_package.DefaultFlags()
@@ -71,6 +73,11 @@ func terminalOutput() {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+    s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)  
+	s.Start()                                                    
+	time.Sleep(4 * time.Second)          
+	s.Stop()
 
 	fmt.Printf("%v\n", asciiArt)
 
